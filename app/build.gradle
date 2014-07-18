@@ -1,0 +1,45 @@
+apply plugin: 'android'
+apply plugin: 'hugo'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        applicationId 'net.akhyar.plurkita'
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 1
+        versionName '0.1.0-alpha.1'
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':akhylib')
+    // Must have libraries
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.jakewharton.timber:timber:2.2.+'
+    compile 'com.jakewharton:butterknife:5.1.0'
+    compile 'de.greenrobot:eventbus:2.2.1'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.retrofit:retrofit:1.6.1'
+    compile 'net.danlew:android.joda:2.3.3'
+    compile 'com.squareup.dagger:dagger:1.2.1'
+    provided 'com.squareup.dagger:dagger-compiler:1.2.1'
+
+    // Additional
+    compile 'oauth.signpost:signpost-core:1.2'
+    compile 'com.netflix.rxjava:rxjava-android:+'
+}
