@@ -48,8 +48,6 @@ public class Plurk extends Model {
     @Column
     int responsesSeen;
     @Column
-    long[] limitedTo;
-    @Column
     boolean favorite;
     @Column
     int favoriteCount;
@@ -100,7 +98,6 @@ public class Plurk extends Model {
         this.contentRaw = plurk.contentRaw;
         this.responseCount = plurk.responseCount;
         this.responsesSeen = plurk.responsesSeen;
-        this.limitedTo = plurk.limitedTo;
         this.favorite = plurk.favorite;
         this.favoriteCount = plurk.favoriteCount;
         this.favorers = plurk.favorers;
@@ -164,10 +161,6 @@ public class Plurk extends Model {
 
     public int getResponsesSeen() {
         return responsesSeen;
-    }
-
-    public long[] getLimitedTo() {
-        return limitedTo;
     }
 
     public boolean isFavorite() {
