@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import com.dd.processbutton.iml.ActionProcessButton;
 
 import net.akhyar.plurkita.api.ErrorEvent;
 import net.akhyar.plurkita.api.TimelineApi;
@@ -30,13 +31,16 @@ import butterknife.OnItemClick;
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 
-public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class TimelineActivity extends BaseActivity implements
+        SwipeRefreshLayout.OnRefreshListener,
+        View.OnClickListener {
 
     @Inject
     Timber.Tree log;
@@ -48,12 +52,30 @@ public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout
     ListView list;
 
     PlurkAdapter adapter;
+    ActionProcessButton loadMore;
 
-    private Action1<Throwable> errorHandler = new Action1<Throwable>() {
+    private Func1<Timeline, Timeline> savePlurk = new Func1<Timeline, Timeline>() {
         @Override
-        public void call(Throwable throwable) {
-            errorBus.post(new ErrorEvent(throwable));
-            swipeContainer.setRefreshing(false);
+        @DebugLog
+        public Timeline call(Timeline timeline) {
+            ActiveAndroid.beginTransaction();
+            Iterator<User> iterator = timeline.getPlurkUsers().values().iterator();
+            for (; iterator.hasNext(); ) {
+                User user = iterator.next();
+                User.upsert(user);
+            }
+            for (Plurk plurk : timeline.getPlurks())
+                Plurk.upsert(plurk);
+
+            ActiveAndroid.setTransactionSuccessful();
+            ActiveAndroid.endTransaction();
+            return timeline;
+        }
+    };
+    private Action1<Timeline> timelineAction = new Action1<Timeline>() {
+        @Override
+        public void call(Timeline timeline) {
+            eventBus.post(new TimelineUpdated());
         }
     };
 
@@ -65,7 +87,12 @@ public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout
         ButterKnife.inject(this);
         eventBus.register(this);
 
+        View footer = getLayoutInflater().inflate(R.layout.item_loadmore, null);
+        loadMore = (ActionProcessButton) footer.findViewById(R.id.loadMore);
+        loadMore.setOnClickListener(this);
+
         adapter = new PlurkAdapter(this, null, false);
+        list.addFooterView(footer);
         list.setAdapter(adapter);
 
         swipeContainer.setOnRefreshListener(this);
@@ -99,37 +126,63 @@ public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     @Override
+    public void onClick(View v) {
+        if (v == loadMore) {
+            onLoadMore();
+        }
+    }
+
+    public void onLoadMore() {
+        Plurk lastItem = adapter.getLastItem();
+        if (lastItem == null)
+            onRefresh();
+        else {
+            ButtonUtil.setState(loadMore, ButtonUtil.STATE_PROCESS, true);
+            String offset = lastItem.getTimestampForOffset();
+            Application.getInstance(TimelineApi.class).getPlurks(offset)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map(savePlurk)
+                    .subscribe(
+                            timelineAction,
+                            new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable throwable) {
+                                    errorBus.post(new ErrorEvent(throwable));
+                                    ButtonUtil.setState(loadMore, ButtonUtil.STATE_ERROR, true);
+                                }
+                            }, new Action0() {
+                                @Override
+                                public void call() {
+                                    ButtonUtil.setState(loadMore, ButtonUtil.STATE_NORMAL, true);
+                                }
+                            }
+                    );
+        }
+    }
+
+    @Override
     public void onRefresh() {
         Application.getInstance(TimelineApi.class).getPlurks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Timeline, Timeline>() {
-                    @Override
-                    @DebugLog
-                    public Timeline call(Timeline timeline) {
-                        ActiveAndroid.beginTransaction();
-                        Iterator<User> iterator = timeline.getPlurkUsers().values().iterator();
-                        for (; iterator.hasNext(); ) {
-                            User user = iterator.next();
-                            User.upsert(user);
+                .map(savePlurk)
+                .subscribe(
+                        timelineAction,
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                errorBus.post(new ErrorEvent(throwable));
+                                swipeContainer.setRefreshing(false);
+                            }
+                        }, new Action0() {
+                            @Override
+                            public void call() {
+                                swipeContainer.setRefreshing(false);
+                            }
                         }
-                        for (Plurk plurk : timeline.getPlurks())
-                            Plurk.upsert(plurk);
-
-                        ActiveAndroid.setTransactionSuccessful();
-                        ActiveAndroid.endTransaction();
-                        return timeline;
-                    }
-                })
-                .subscribe(new Action1<Timeline>() {
-                    @Override
-                    public void call(Timeline timeline) {
-                        swipeContainer.setRefreshing(false);
-                        eventBus.post(new TimelineUpdated());
-                    }
-                }, errorHandler);
+                );
     }
-
 
     private class PlurkAdapter extends CursorAdapter {
 
@@ -141,11 +194,15 @@ public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout
             super(context, c, flags);
         }
 
+        public Plurk getLastItem() {
+            long id = getItemId(getCount() - 1);
+            return Plurk.find(id);
+        }
+
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             PlurkViewHolder holder = new PlurkViewHolder();
             return holder.createView(context, parent);
-//            view.setTag(holder);
         }
 
         @Override
@@ -156,12 +213,5 @@ public class TimelineActivity extends BaseActivity implements SwipeRefreshLayout
             PlurkViewHolder holder = (PlurkViewHolder) view.getTag();
             holder.bind(cursor.getPosition(), plurk);
         }
-
-//        @Override
-//        public void notifyDataSetChanged() {
-//            setList(new Select().from(Plurk.class).<Plurk>execute());
-//            super.notifyDataSetChanged();
-//        }
     }
-
 }

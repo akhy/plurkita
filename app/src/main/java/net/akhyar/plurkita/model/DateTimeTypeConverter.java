@@ -16,6 +16,8 @@ import java.lang.reflect.Type;
 import java.util.Date;
 
 /**
+ * For use with GSON
+ *
  * @author akhyar
  */
 public class DateTimeTypeConverter

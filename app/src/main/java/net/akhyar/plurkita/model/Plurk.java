@@ -6,6 +6,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * @author akhyar
@@ -13,6 +15,7 @@ import org.joda.time.DateTime;
 @Table(name = Plurk.TABLE_NAME)
 public class Plurk extends Model {
 
+    public static final DateTimeFormatter OFFSET_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
     public static final String ID = "_id";
     public static final String TABLE_NAME = "Plurks";
 
@@ -105,6 +108,10 @@ public class Plurk extends Model {
         this.replurked = plurk.replurked;
         this.replurkersCount = plurk.replurkersCount;
         this.replurkers = plurk.replurkers;
+    }
+
+    public String getTimestampForOffset() {
+        return OFFSET_FORMAT.print(posted);
     }
 
     public long getReplurkerId() {

@@ -5,6 +5,8 @@ import com.activeandroid.serializer.TypeSerializer;
 import org.joda.time.DateTime;
 
 /**
+ * For use with ActiveAndroid
+ *
  * @author akhyar
  */
 public class DateTimeTypeSerializer extends TypeSerializer {
