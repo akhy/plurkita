@@ -10,6 +10,8 @@ import net.akhyar.plurkita.AppPreferences;
 import net.akhyar.plurkita.Application;
 import net.akhyar.plurkita.AuthorizeActivity;
 import net.akhyar.plurkita.BaseActivity;
+import net.akhyar.plurkita.LoginActivity;
+import net.akhyar.plurkita.ResponsesActivity;
 import net.akhyar.plurkita.TimelineActivity;
 
 import javax.inject.Singleton;
@@ -24,8 +26,10 @@ import dagger.Provides;
         injects = {
                 Application.class,
                 BaseActivity.class,
+                LoginActivity.class,
+                AuthorizeActivity.class,
                 TimelineActivity.class,
-                AuthorizeActivity.class
+                ResponsesActivity.class
         })
 public class ApplicationModule {
 

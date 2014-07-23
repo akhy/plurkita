@@ -1,47 +1,110 @@
 package net.akhyar.plurkita.model;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.joda.time.DateTime;
 
 /**
  * @author akhyar
  */
-public class Plurk {
+@Table(name = Plurk.TABLE_NAME)
+public class Plurk extends Model {
 
+    public static final String ID = "_id";
+    public static final String TABLE_NAME = "Plurks";
+
+    @Column(name = ID, index = true)
     long plurkId;
+    @Column
     long replurkerId;
+    @Column
     long userId;
+    @Column
     long ownerId;
+    @Column
     String qualifier;
+    @Column
     String qualifierTranslated;
+    @Column
     int isUnread;
+    @Column
     int plurkType;
+    @Column
     DateTime posted;
+    @Column
     int noComments;
+    @Column
     String content;
+    @Column
     String contentRaw;
+    @Column
     int responseCount;
+    @Column
     int responsesSeen;
-    int[] limitedTo;
+    @Column
+    long[] limitedTo;
+    @Column
     boolean favorite;
+    @Column
     int favoriteCount;
-    int[] favorers;
+    @Column
+    long[] favorers;
+    @Column
     boolean replurkable;
+    @Column
     boolean replurked;
+    @Column
     int replurkersCount;
-    int[] replurkers;
+    @Column
+    long[] replurkers;
 
-    private User _user;
-
-    public User get_user() {
-        return _user;
+    public static void upsert(Plurk plurk) {
+        Plurk existing = find(plurk.getPlurkId());
+        if (existing == null) {
+            plurk.save();
+        } else {
+            existing.loadFrom(plurk);
+            existing.save();
+        }
     }
 
-    public void set_user(User _user) {
-        this._user = _user;
+    public static Plurk find(long plurkId) {
+        return new Select()
+                .from(Plurk.class)
+                .where(ID + " = ?", plurkId)
+                .executeSingle();
     }
 
     public long getPlurkId() {
         return plurkId;
+    }
+
+    public void loadFrom(Plurk plurk) {
+        this.plurkId = plurk.plurkId;
+        this.replurkerId = plurk.replurkerId;
+        this.userId = plurk.userId;
+        this.ownerId = plurk.ownerId;
+        this.qualifier = plurk.qualifier;
+        this.qualifierTranslated = plurk.qualifierTranslated;
+        this.isUnread = plurk.isUnread;
+        this.plurkType = plurk.plurkType;
+        this.posted = plurk.posted;
+        this.noComments = plurk.noComments;
+        this.content = plurk.content;
+        this.contentRaw = plurk.contentRaw;
+        this.responseCount = plurk.responseCount;
+        this.responsesSeen = plurk.responsesSeen;
+        this.limitedTo = plurk.limitedTo;
+        this.favorite = plurk.favorite;
+        this.favoriteCount = plurk.favoriteCount;
+        this.favorers = plurk.favorers;
+        this.replurkable = plurk.replurkable;
+        this.replurked = plurk.replurked;
+        this.replurkersCount = plurk.replurkersCount;
+        this.replurkers = plurk.replurkers;
     }
 
     public long getReplurkerId() {
@@ -96,7 +159,7 @@ public class Plurk {
         return responsesSeen;
     }
 
-    public int[] getLimitedTo() {
+    public long[] getLimitedTo() {
         return limitedTo;
     }
 
@@ -108,7 +171,7 @@ public class Plurk {
         return favoriteCount;
     }
 
-    public int[] getFavorers() {
+    public long[] getFavorers() {
         return favorers;
     }
 
@@ -124,7 +187,7 @@ public class Plurk {
         return replurkersCount;
     }
 
-    public int[] getReplurkers() {
+    public long[] getReplurkers() {
         return replurkers;
     }
 }

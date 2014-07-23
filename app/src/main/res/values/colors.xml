@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffFFff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#999999</color>
+    <color name="gray_bare">#fafafa</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="primary_darkest">#8b360b</color>
+    <color name="primary_darker">#b05426</color>
+    <color name="primary_base">#cf7345</color>
+    <color name="primary_lighter">#f19c71</color>
+    <color name="primary_lightest">#ffc1a2</color>
+
+    <color name="secondary_darkest">#8B570B</color>
+    <color name="secondary_darker">#B07926</color>
+    <color name="secondary_base">#CF9845</color>
+    <color name="secondary_lighter">#F1BE71</color>
+    <color name="secondary_lightest">#FFDAA2</color>
+
+    <color name="tertiary_darkest">#0D335A</color>
+    <color name="tertiary_darker">#1F4873</color>
+    <color name="tertiary_base">#345C87</color>
+    <color name="tertiary_lighter">#50769D</color>
+    <color name="tertiary_lightest">#7E9EBE</color>
+
+    <color name="complementary_darkest">#075C40</color>
+    <color name="complementary_darker">#197557</color>
+    <color name="complementary_base">#2E8A6C</color>
+    <color name="complementary_lighter">#4BA185</color>
+    <color name="complementary_lightest">#7BC1AA</color>
+
+    <integer-array name="plurk_theme">
+        <item>@color/primary_darkest</item>
+        <!-- really much darker color of main color -->
+        <item>@color/primary_darker</item>
+        <!-- a bit darker color of your main color -->
+        <item>@color/primary_base</item>
+        <!-- main color of your theme -->
+        <item>@color/primary_lightest</item>
+        <!-- really much lighter color of main color -->
+    </integer-array>
+</resources>

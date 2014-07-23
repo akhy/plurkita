@@ -30,14 +30,14 @@ public class AppPreferences {
         return preferences.getString(KEY_TOKEN, null);
     }
 
+    public String getOAuthTokenSecret() {
+        return preferences.getString(KEY_TOKEN_SECRET, null);
+    }
+
     public void clearOAuthToken() {
         preferences.edit()
                 .remove(KEY_TOKEN)
                 .remove(KEY_TOKEN_SECRET)
                 .commit();
-    }
-
-    public String getOAuthTokenSecret() {
-        return preferences.getString(KEY_TOKEN_SECRET, null);
     }
 }

@@ -59,6 +59,14 @@ public class UtilityModule {
 
     @Provides
     @Singleton
+    @For("error")
+    EventBus provideEventBusForError() {
+        return new EventBus();
+    }
+
+
+    @Provides
+    @Singleton
     Timber.Tree provideTimberTree() {
         return BuildConfig.DEBUG ? new Timber.DebugTree() : new Timber.HollowTree();
     }

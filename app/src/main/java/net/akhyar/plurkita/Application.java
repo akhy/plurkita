@@ -1,6 +1,7 @@
 package net.akhyar.plurkita;
 
 import com.activeandroid.ActiveAndroid;
+import com.cengalabs.flatui.FlatUI;
 
 import net.akhyar.plurkita.api.ApiModule;
 import net.akhyar.plurkita.module.ApplicationModule;
@@ -19,6 +20,8 @@ import timber.log.Timber;
 public class Application extends android.app.Application {
 
     private static ObjectGraph graph;
+    @Inject
+    EventBus eventBus;
 
     public static void inject(Object object) {
         graph.inject(object);
@@ -28,13 +31,11 @@ public class Application extends android.app.Application {
         return graph.get(cls);
     }
 
-    @Inject
-    EventBus eventBus;
-
     @Override
     public void onCreate() {
         super.onCreate();
 
+        FlatUI.setDefaultTheme(R.array.plurk_theme);
         ActiveAndroid.initialize(this);
         ResourceZoneInfoProvider.init(this);
         graph = ObjectGraph.create(

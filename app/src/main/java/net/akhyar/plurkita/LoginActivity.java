@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import net.akhyar.plurkita.api.AuthApi;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -23,6 +26,8 @@ public class LoginActivity extends BaseActivity {
     Timber.Tree log;
     @Inject
     AppPreferences preferences;
+    @InjectView(R.id.login)
+    ActionProcessButton login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +35,17 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         Application.inject(this);
         ButterKnife.inject(this);
+        login.setMode(ActionProcessButton.Mode.ENDLESS);
+        login.setProgress(0);
     }
 
 
     @OnClick(R.id.login)
     public void requestToken() {
         preferences.clearOAuthToken();
+        login.setEnabled(false);
+        login.setProgress(50);
+        login.setLoadingText("Requesting Token");
         Application.getInstance(AuthApi.class).getRequestToken(new Callback<String>() {
             @Override
             public void success(String tokenParams, Response response) {
@@ -48,9 +58,9 @@ public class LoginActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                preferences.clearOAuthToken();
-                log.e(error, "Error");
+            public void failure(RetrofitError retrofitError) {
+                log.e(retrofitError, "Error requesting token");
+                onError(retrofitError);
             }
         });
     }
@@ -60,21 +70,29 @@ public class LoginActivity extends BaseActivity {
         startActivityForResult(verifierIntent, REQ_VERIFIER);
     }
 
+    private void onError(Throwable throwable) {
+        preferences.clearOAuthToken();
+        login.setProgress(-1);
+        login.setEnabled(true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQ_VERIFIER) {
-            String verifier = data.getStringExtra(AuthorizeActivity.EXTRA_OAUTH_VERIFIER);
-            log.d("Verifier found: %s", verifier);
-            requestAccessToken(verifier);
-        } else {
-            preferences.clearOAuthToken();
-            log.w("Verifier request failed");
+            if (resultCode == RESULT_OK) {
+                String verifier = data.getStringExtra(AuthorizeActivity.EXTRA_OAUTH_VERIFIER);
+                log.d("Verifier found: %s", verifier);
+                requestAccessToken(verifier);
+            } else {
+                onError(new Exception("Failed to authorize"));
+            }
         }
     }
 
     private void requestAccessToken(String verifier) {
+        login.setLoadingText("Verifying Access");
         Application.getInstance(AuthApi.class).getAccessToken(
                 verifier,
                 new Callback<String>() {
@@ -85,12 +103,15 @@ public class LoginActivity extends BaseActivity {
                         preferences.setOAuthToken(
                                 uri.getQueryParameter("oauth_token"),
                                 uri.getQueryParameter("oauth_token_secret"));
+
+                        login.setProgress(100);
+                        login.setEnabled(true);
                     }
 
                     @Override
                     public void failure(RetrofitError retrofitError) {
                         log.d(retrofitError, "Error getting access token");
-                        preferences.clearOAuthToken();
+                        onError(retrofitError);
                     }
                 }
         );

@@ -2,7 +2,6 @@ package net.akhyar.plurkita.api;
 
 import net.akhyar.plurkita.model.Timeline;
 
-import retrofit.Callback;
 import retrofit.http.GET;
 import rx.Observable;
 
@@ -11,10 +10,7 @@ import rx.Observable;
  */
 public interface TimelineApi {
 
-    @GET("/getPlurks?limit=10")
-    void getPlurks(Callback<Timeline> callback);
+    @GET("/Timeline/getPlurks?limit=10")
+    Observable<Timeline> getPlurks();
 
-
-    @GET("/getPlurks?limit=10")
-    Observable<Timeline> getPlurksObservable();
 }

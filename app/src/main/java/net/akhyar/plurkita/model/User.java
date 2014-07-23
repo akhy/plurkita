@@ -49,7 +49,17 @@ public class User extends Model {
         return userId;
     }
 
-    public void copyFrom(User user) {
+    public static void upsert(User user) {
+        User existing = find(user.getUserId());
+        if (existing == null) {
+            user.save();
+        } else {
+            existing.loadFrom(user);
+            existing.save();
+        }
+    }
+
+    public void loadFrom(User user) {
         this.userId = user.userId;
         this.nickName = user.nickName;
         this.displayName = user.displayName;
@@ -67,14 +77,7 @@ public class User extends Model {
     }
 
     public String getAvatarUrl(String size) {
-        String ext = "big".equalsIgnoreCase(size) ? "jpg" : "gif";
-        if (hasProfileImage == 1) {
-            String avatarString = avatar >= 0 ? String.valueOf(avatar) : "";
-            return String.format("http://avatars.plurk.com/%d-%s%s.%s",
-                    userId, size, avatarString, ext);
-        } else {
-            return String.format("http://www.plurk.com/static/default_%s.%s", size, ext);
-        }
+        return Utils.getAvatarUrl(userId, hasProfileImage, avatar, size);
     }
 
     public String getNickName() {

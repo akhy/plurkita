@@ -13,6 +13,7 @@ public class WebActivity extends BaseActivity {
         WebView webView = (WebView) findViewById(R.id.webview);
         setUpWebView(webView);
         webView.loadUrl(getDefaultUrl());
+        // TODO add loading indicator
     }
 
     protected String getDefaultUrl() {

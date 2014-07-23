@@ -20,9 +20,12 @@ import java.util.Date;
  */
 public class DateTimeTypeConverter
         implements JsonSerializer<DateTime>, JsonDeserializer<DateTime> {
+
+    DateTimeFormatter formatter = DateTimeFormat.forPattern("E, dd MMM yyyy HH:mm:ss ZZZZ");
+
     @Override
     public JsonElement serialize(DateTime src, Type srcType, JsonSerializationContext context) {
-        return new JsonPrimitive(src.toString());
+        return new JsonPrimitive(formatter.print(src));
     }
 
     @Override
@@ -30,8 +33,7 @@ public class DateTimeTypeConverter
             throws JsonParseException {
 
         try {
-            DateTimeFormatter fmt = DateTimeFormat.forPattern("E, dd MMM yyyy HH:mm:ss ZZZZ");
-            return fmt.parseDateTime(json.getAsString());
+            return formatter.parseDateTime(json.getAsString());
         } catch (IllegalArgumentException e) {
             // May be it came in formatted as a java.util.Date, so try that
             Date date = context.deserialize(json, Date.class);

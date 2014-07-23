@@ -18,7 +18,7 @@ import butterknife.InjectView;
 /**
  * @author akhyar
  */
-public class PlurkViewHolder extends ViewHolderListAdapter.ViewHolder<Plurk> {
+public class ResponseViewHolder extends ViewHolderListAdapter.ViewHolder<Response> {
 
     Context context;
 
@@ -34,15 +34,15 @@ public class PlurkViewHolder extends ViewHolderListAdapter.ViewHolder<Plurk> {
     @Override
     public View createView(Context context, ViewGroup parent) {
         this.context = context;
-        View view = LayoutInflater.from(context).inflate(R.layout.item_plurk, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_response, null);
         ButterKnife.inject(this, view);
         view.setTag(this);
         return view;
     }
 
     @Override
-    public void bind(int pos, Plurk plurk) {
-        User user = User.find(plurk.getOwnerId());
+    public void bind(int pos, Response response) {
+        User user = User.find(response.getUserId());
         if (user != null) {
             displayName.setText(user.getDisplayName());
             nickName.setText(String.format("@%s", user.getNickName()));
@@ -50,6 +50,6 @@ public class PlurkViewHolder extends ViewHolderListAdapter.ViewHolder<Plurk> {
             Picasso.with(context)
                     .load(user.getAvatarUrl()).into(avatar);
         }
-        content.setText(plurk.getContentRaw());
+        content.setText(response.getContentRaw());
     }
 }

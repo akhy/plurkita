@@ -1,8 +1,15 @@
 package net.akhyar.plurkita.api;
 
 import com.google.gson.Gson;
+import com.squareup.okhttp.OkHttpClient;
 
 import net.akhyar.plurkita.AppPreferences;
+import net.akhyar.plurkita.api.util.SignedHeaderClient;
+
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.PlurkApi;
+import org.scribe.model.Token;
+import org.scribe.oauth.OAuthService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,17 +18,12 @@ import java.lang.reflect.Type;
 
 import dagger.Module;
 import dagger.Provides;
-import oauth.signpost.OAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthConsumer;
-import oauth.signpost.signature.AuthorizationHeaderSigningStrategy;
-import oauth.signpost.signature.QueryStringSigningStrategy;
 import retrofit.RestAdapter;
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
-import se.akerfeldt.signpost.retrofit.SigningOkClient;
 
 /**
  * @author akhyar
@@ -29,7 +31,8 @@ import se.akerfeldt.signpost.retrofit.SigningOkClient;
 @Module(library = true, complete = false,
         injects = {
                 AuthApi.class,
-                TimelineApi.class
+                TimelineApi.class,
+                ResponseApi.class
         })
 public class ApiModule {
 
@@ -41,13 +44,8 @@ public class ApiModule {
         this.consumerSecret = consumerSecret;
     }
 
-
     @Provides
-    AuthApi provideAuthApi(AppPreferences pref) {
-        OAuthConsumer oAuthConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        oAuthConsumer.setTokenWithSecret(pref.getOAuthToken(), pref.getOAuthTokenSecret());
-        oAuthConsumer.setSigningStrategy(new QueryStringSigningStrategy());
-
+    AuthApi provideAuthApi(OAuthService service, AppPreferences pref) {
         Converter converter = new Converter() {
             @Override
             public String fromBody(TypedInput typedInput, Type type) throws ConversionException {
@@ -66,9 +64,14 @@ public class ApiModule {
             }
         };
 
+
+        Token token = (pref.getOAuthToken() == null || pref.getOAuthTokenSecret() == null)
+                ? Token.empty()
+                : new Token(pref.getOAuthToken(), pref.getOAuthTokenSecret());
+
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint("http://www.plurk.com/OAuth")
-                .setClient(new SigningOkClient(oAuthConsumer))
+                .setClient(new SignedHeaderClient(service, token))
                 .setConverter(converter)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
@@ -77,18 +80,42 @@ public class ApiModule {
     }
 
     @Provides
-    TimelineApi provideTimelineApi(Gson gson, AppPreferences pref) {
-        OAuthConsumer oAuthConsumer = new DefaultOAuthConsumer(consumerKey, consumerSecret);
-        oAuthConsumer.setTokenWithSecret(pref.getOAuthToken(), pref.getOAuthTokenSecret());
-        oAuthConsumer.setSigningStrategy(new AuthorizationHeaderSigningStrategy());
-
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint("http://www.plurk.com/APP/Timeline")
-                .setClient(new SigningOkClient(oAuthConsumer))
-                .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
+    OAuthService provideOAuthService() {
+        return new ServiceBuilder().provider(PlurkApi.Mobile.class)
+                .apiKey(consumerKey)
+                .apiSecret(consumerSecret)
                 .build();
-
-        return adapter.create(TimelineApi.class);
     }
+
+    @Provides
+    SignedHeaderClient provideSignedHeaderClient(OAuthService service, AppPreferences pref) {
+        return new SignedHeaderClient(service, new Token(pref.getOAuthToken(), pref.getOAuthTokenSecret()));
+    }
+
+    @Provides
+    OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient();
+    }
+
+    @Provides
+    RestAdapter provideDefaultRestAdapter(Gson gson, SignedHeaderClient client) {
+        return new RestAdapter.Builder()
+                .setEndpoint("http://www.plurk.com/APP")
+                .setClient(client)
+                .setConverter(new GsonConverter(gson))
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+    }
+
+    @Provides
+    TimelineApi provideTimelineApi(RestAdapter restAdapter) {
+        return restAdapter.create(TimelineApi.class);
+    }
+
+    @Provides
+    ResponseApi provideResponseApi(RestAdapter restAdapter) {
+        return restAdapter.create(ResponseApi.class);
+    }
+
+
 }

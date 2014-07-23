@@ -1,18 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context="net.akhyar.plurkita.LoginActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context=".LoginActivity">
 
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/login"
-        android:text="Login"/>
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/creature_4"/>
 
-</RelativeLayout>
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:text="Log me in!"
+        android:textColor="@color/white"
+        app:pb_colorComplete="@color/complementary_lighter"
+        app:pb_colorError="#ffff0077"
+        app:pb_colorNormal="@color/primary_base"
+        app:pb_colorPressed="@color/primary_darker"
+        app:pb_colorProgress="@color/tertiary_lighter"
+        app:pb_textError="Error"
+        app:pb_textComplete="Success"
+        app:pb_textProgress="Authenticating"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxWidth="200dp"
+        android:text="No worries, we never store your username and password."
+        android:textAppearance="?android:textAppearanceSmall"/>
+
+</LinearLayout>
