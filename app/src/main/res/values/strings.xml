@@ -9,5 +9,8 @@
     <string name="title_activity_web">Browser</string>
     <string name="title_activity_login">Login to Plurk</string>
     <string name="login">Login</string>
+    <string name="response_count">{fa-comment} %d</string>
+    <string name="favorite_count">{fa-heart} %d</string>
+    <string name="replurk_count">{fa-retweet} %d</string>
 
 </resources>

@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginRight="8dp"
-        android:background="#345678"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/avatar_bg"
         android:scaleType="centerCrop"/>
 
     <TextView
@@ -19,26 +19,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/avatar"
         android:text="odynx"
-        android:textStyle="bold"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/nickName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/displayName"
         android:text="\@odynx"
-        android:textColor="#ababab"/>
+        android:textColor="#ababab"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/contentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/displayName"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/avatar"
-        android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit :)"/>
+        android:ellipsize="end"
+        android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit :)"
+        android:textColor="#787878"/>
+
+
 </RelativeLayout>

@@ -6,6 +6,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -109,6 +111,29 @@ public class Plurk extends Model {
 
     public String getTimestampForOffset() {
         return OFFSET_FORMAT.print(posted);
+    }
+
+    public String getShortRelativeTime() {
+        DateTime now = DateTime.now();
+        if (posted.isAfter(now))
+            posted = now;
+
+        Period p = new Period(posted, now);
+        StringBuilder b = new StringBuilder();
+
+        if (new Duration(posted, now).getStandardMinutes() == 0) {
+            b.append("Just now");
+        } else {
+            if (p.getWeeks() > 0)
+                b.append(p.getWeeks()).append("w");
+            else if (p.getDays() > 0)
+                b.append(p.getDays()).append("d");
+            else if (p.getHours() > 0)
+                b.append(p.getHours()).append("h");
+            else if (p.getMinutes() > 0)
+                b.append(p.getMinutes()).append("m");
+        }
+        return b.toString();
     }
 
     public long getReplurkerId() {

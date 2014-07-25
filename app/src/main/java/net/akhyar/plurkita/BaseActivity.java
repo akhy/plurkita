@@ -48,7 +48,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void onEventMainThread(ErrorEvent event) {
-        Crouton.makeText(this, event.getMessage(), Style.ALERT).show();
+        showAlert(event.getMessage());
+    }
+
+    public void showAlert(String text) {
+        Crouton.makeText(this, text, Style.ALERT).show();
     }
 
     @Override
