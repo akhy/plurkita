@@ -12,5 +12,7 @@
     <string name="response_count">{fa-comment} %d</string>
     <string name="favorite_count">{fa-heart} %d</string>
     <string name="replurk_count">{fa-retweet} %d</string>
+    <string name="title_activity_new_plurk">New Plurk</string>
+    <string name="send">Send</string>
 
 </resources>

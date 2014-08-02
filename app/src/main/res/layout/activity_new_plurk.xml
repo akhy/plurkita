@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                tools:context=".NewPlurkActivity">
+
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_bare"
+        android:orientation="horizontal">
+
+        <android.widget.IconButton
+            style="@style/AppTheme.Button.Toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Emoticon"
+            android:text="{fa-smile-o}"/>
+
+        <android.widget.IconButton
+            style="@style/AppTheme.Button.Toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Emoticon"
+            android:text="{fa-picture-o}"/>
+
+        <android.widget.IconButton
+            style="@style/AppTheme.Button.Toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Emoticon"
+            android:text="{fa-lock}"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/AppTheme.Qualifier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="says:"/>
+
+            <EditText
+                android:id="@+id/contentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|left"
+                android:hint="Share something"
+                android:inputType="textMultiLine|textNoSuggestions"/>
+
+            <TextView
+                style="@style/AppTheme.CharCounter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12/200"/>
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

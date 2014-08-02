@@ -2,6 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:editTextStyle">@style/AppTheme.EditText</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="android:textViewStyle">@style/AppTheme.TextView</item>
         <item name="android:buttonStyle">@style/AppTheme.Button</item>
@@ -15,6 +16,38 @@
     </style>
 
     <style name="AppTheme.Button" parent="android:Widget.Holo.Button">
+    </style>
+
+    <style name="AppTheme.Button.Toolbar">
+        <item name="android:textColor">#454545</item>
+        <item name="android:background">@drawable/toolbar_button</item>
+    </style>
+
+    <style name="AppTheme.EditText" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">#656565</item>
+        <item name="android:textColorHint">#cacaca</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/underline</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <style name="AppTheme.CharCounter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="AppTheme.Qualifier">
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:background">@drawable/qualifier</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

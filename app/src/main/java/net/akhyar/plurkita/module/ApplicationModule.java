@@ -11,6 +11,7 @@ import net.akhyar.plurkita.Application;
 import net.akhyar.plurkita.AuthorizeActivity;
 import net.akhyar.plurkita.BaseActivity;
 import net.akhyar.plurkita.LoginActivity;
+import net.akhyar.plurkita.NewPlurkActivity;
 import net.akhyar.plurkita.ResponsesActivity;
 import net.akhyar.plurkita.TimelineActivity;
 
@@ -29,6 +30,7 @@ import dagger.Provides;
                 LoginActivity.class,
                 AuthorizeActivity.class,
                 TimelineActivity.class,
+                NewPlurkActivity.class,
                 ResponsesActivity.class
         })
 public class ApplicationModule {

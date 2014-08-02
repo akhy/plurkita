@@ -5,6 +5,7 @@
     <color name="gray">#999999</color>
     <color name="gray_bare">#fafafa</color>
     <color name="transparent">#00000000</color>
+    <color name="highlight">#334BA185</color>
 
     <color name="primary_darkest">#8b360b</color>
     <color name="primary_darker">#b05426</color>

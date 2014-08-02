@@ -1,6 +1,7 @@
 package net.akhyar.plurkita;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.OnItemClick;
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
@@ -35,15 +37,11 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 
 public class TimelineActivity extends BaseActivity implements
-        SwipeRefreshLayout.OnRefreshListener,
-        View.OnClickListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
-    @Inject
-    Timber.Tree log;
     @Inject
     EventBus eventBus;
     @InjectView(R.id.swipeContainer)
@@ -89,7 +87,12 @@ public class TimelineActivity extends BaseActivity implements
 
         View footer = getLayoutInflater().inflate(R.layout.item_loadmore, null);
         loadMore = (ActionProcessButton) footer.findViewById(R.id.loadMore);
-        loadMore.setOnClickListener(this);
+        loadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoadMore();
+            }
+        });
 
         adapter = new PlurkAdapter(this, null, false);
         list.addFooterView(footer);
@@ -104,32 +107,6 @@ public class TimelineActivity extends BaseActivity implements
         );
 
         onEvent(new TimelineUpdated());
-    }
-
-    public void onEvent(TimelineUpdated ignored) {
-        String sql = new Select().from(Plurk.class).orderBy("posted DESC").toSql();
-        Cursor cursor = ActiveAndroid.getDatabase().rawQuery(sql, null);
-
-        adapter.changeCursor(cursor);
-        adapter.notifyDataSetChanged();
-    }
-
-    @OnItemClick(R.id.list)
-    public void openComments(long id) {
-        ResponsesActivity.create(this, id).startActivity();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        eventBus.unregister(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == loadMore) {
-            onLoadMore();
-        }
     }
 
     public void onLoadMore() {
@@ -161,6 +138,14 @@ public class TimelineActivity extends BaseActivity implements
         }
     }
 
+    public void onEvent(TimelineUpdated ignored) {
+        String sql = new Select().from(Plurk.class).orderBy("posted DESC").toSql();
+        Cursor cursor = ActiveAndroid.getDatabase().rawQuery(sql, null);
+
+        adapter.changeCursor(cursor);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onRefresh() {
         Application.getInstance(TimelineApi.class).getPlurks()
@@ -182,6 +167,22 @@ public class TimelineActivity extends BaseActivity implements
                             }
                         }
                 );
+    }
+
+    @OnClick(R.id.newPlurk)
+    public void newPlurk() {
+        startActivity(new Intent(this, NewPlurkActivity.class));
+    }
+
+    @OnItemClick(R.id.list)
+    public void openComments(long id) {
+        ResponsesActivity.create(this, id).startActivity();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        eventBus.unregister(this);
     }
 
     private class PlurkAdapter extends CursorAdapter {
