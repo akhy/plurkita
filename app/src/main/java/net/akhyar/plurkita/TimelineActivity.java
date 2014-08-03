@@ -16,6 +16,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 
 import net.akhyar.plurkita.api.ErrorEvent;
 import net.akhyar.plurkita.api.TimelineApi;
+import net.akhyar.plurkita.event.ResponseAdded;
 import net.akhyar.plurkita.event.TimelineUpdated;
 import net.akhyar.plurkita.model.Plurk;
 import net.akhyar.plurkita.model.PlurkViewHolder;
@@ -32,6 +33,7 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -139,11 +141,7 @@ public class TimelineActivity extends BaseActivity implements
     }
 
     public void onEvent(TimelineUpdated ignored) {
-        String sql = new Select().from(Plurk.class).orderBy("posted DESC").toSql();
-        Cursor cursor = ActiveAndroid.getDatabase().rawQuery(sql, null);
-
-        adapter.changeCursor(cursor);
-        adapter.notifyDataSetChanged();
+        reloadTimeline();
     }
 
     @Override
@@ -167,6 +165,30 @@ public class TimelineActivity extends BaseActivity implements
                             }
                         }
                 );
+    }
+
+    private void reloadTimeline() {
+        String sql = new Select().from(Plurk.class).orderBy("posted DESC").toSql();
+        Observable.just(sql)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<String, Cursor>() {
+                    @Override
+                    public Cursor call(String sql) {
+                        return ActiveAndroid.getDatabase().rawQuery(sql, null);
+                    }
+                })
+                .subscribe(new Action1<Cursor>() {
+                    @Override
+                    public void call(Cursor cursor) {
+                        adapter.changeCursor(cursor);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    public void onEvent(ResponseAdded ignored) {
+        reloadTimeline();
     }
 
     @OnClick(R.id.newPlurk)
