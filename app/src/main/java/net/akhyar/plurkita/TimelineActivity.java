@@ -16,7 +16,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 
 import net.akhyar.plurkita.api.ErrorEvent;
 import net.akhyar.plurkita.api.TimelineApi;
-import net.akhyar.plurkita.event.ResponseAdded;
+import net.akhyar.plurkita.event.PlurkAdded;
 import net.akhyar.plurkita.event.TimelineUpdated;
 import net.akhyar.plurkita.model.Plurk;
 import net.akhyar.plurkita.model.PlurkViewHolder;
@@ -168,6 +168,10 @@ public class TimelineActivity extends BaseActivity implements
     }
 
     private void reloadTimeline() {
+        reloadTimeline(false);
+    }
+
+    private void reloadTimeline(final boolean scrollToTop) {
         String sql = new Select().from(Plurk.class).orderBy("posted DESC").toSql();
         Observable.just(sql)
                 .subscribeOn(Schedulers.io())
@@ -183,12 +187,16 @@ public class TimelineActivity extends BaseActivity implements
                     public void call(Cursor cursor) {
                         adapter.changeCursor(cursor);
                         adapter.notifyDataSetChanged();
+
+                        if (scrollToTop)
+                            list.setSelection(0);
                     }
                 });
     }
 
-    public void onEvent(ResponseAdded ignored) {
-        reloadTimeline();
+    public void onEvent(PlurkAdded event) {
+        Plurk.upsert(event.getPlurk());
+        reloadTimeline(true);
     }
 
     @OnClick(R.id.newPlurk)

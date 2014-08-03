@@ -59,9 +59,9 @@ public class ResponsesActivity extends BaseActivity implements SwipeRefreshLayou
     View emptyView;
     @Inject
     ResponseApi responseApi;
-
     @Inject
     EventBus eventBus;
+
     private ResponseAdapter mAdapter = new ResponseAdapter();
     private Plurk mPlurk;
     private Action1<Throwable> errorHandler = new Action1<Throwable>() {
