@@ -1,5 +1,6 @@
 .gradle
 /local.properties
+/keystore.properties
 /.idea/workspace.xml
 .DS_Store
 
@@ -31,9 +32,23 @@ Thumbs.db
 .project
 
 # Android Studio
-.idea
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
 .gradle
 build/
 
 *.orig
+
+# Crashlytics configuations
+com_crashlytics_export_strings.xml
+app/src/main/assets/crashlytics-build.properties
+app/crashlytics.properties

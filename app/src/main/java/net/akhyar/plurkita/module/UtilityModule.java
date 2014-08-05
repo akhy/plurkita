@@ -2,6 +2,7 @@ package net.akhyar.plurkita.module;
 
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.FieldNamingPolicy;
@@ -68,7 +69,19 @@ public class UtilityModule {
     @Provides
     @Singleton
     Timber.Tree provideTimberTree() {
-        return BuildConfig.DEBUG ? new Timber.DebugTree() : new Timber.HollowTree();
+        return BuildConfig.DEBUG ? new Timber.DebugTree() : new Timber.HollowTree() {
+
+            @Override
+            public void e(String message, Object... args) {
+                Crashlytics.logException(new Exception(message));
+            }
+
+            @Override
+            public void e(Throwable t, String message, Object... args) {
+                Crashlytics.log(message);
+                Crashlytics.logException(t);
+            }
+        };
     }
 
     @Provides
