@@ -46,6 +46,8 @@ public class TimelineActivity extends BaseActivity implements
 
     @Inject
     EventBus eventBus;
+    @Inject
+    Session session;
     @InjectView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
     @InjectView(R.id.list)
@@ -86,6 +88,11 @@ public class TimelineActivity extends BaseActivity implements
         Application.inject(this);
         ButterKnife.inject(this);
         eventBus.register(this);
+
+        if (!session.isLoggedIn()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         View footer = getLayoutInflater().inflate(R.layout.item_loadmore, null);
         loadMore = (ActionProcessButton) footer.findViewById(R.id.loadMore);

@@ -3,7 +3,7 @@ package net.akhyar.plurkita.api;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
-import net.akhyar.plurkita.AppPreferences;
+import net.akhyar.plurkita.Session;
 import net.akhyar.plurkita.api.util.SignedHeaderClient;
 
 import org.scribe.builder.ServiceBuilder;
@@ -32,7 +32,8 @@ import retrofit.mime.TypedOutput;
         injects = {
                 AuthApi.class,
                 TimelineApi.class,
-                ResponseApi.class
+                ResponseApi.class,
+                UserApi.class
         })
 public class ApiModule {
 
@@ -45,7 +46,7 @@ public class ApiModule {
     }
 
     @Provides
-    AuthApi provideAuthApi(OAuthService service, AppPreferences pref) {
+    AuthApi provideAuthApi(OAuthService service, Session session) {
         Converter converter = new Converter() {
             @Override
             public String fromBody(TypedInput typedInput, Type type) throws ConversionException {
@@ -65,9 +66,9 @@ public class ApiModule {
         };
 
 
-        Token token = (pref.getOAuthToken() == null || pref.getOAuthTokenSecret() == null)
+        Token token = (session.getToken() == null || session.getTokenSecret() == null)
                 ? Token.empty()
-                : new Token(pref.getOAuthToken(), pref.getOAuthTokenSecret());
+                : new Token(session.getToken(), session.getTokenSecret());
 
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint("http://www.plurk.com/OAuth")
@@ -88,8 +89,8 @@ public class ApiModule {
     }
 
     @Provides
-    SignedHeaderClient provideSignedHeaderClient(OAuthService service, AppPreferences pref) {
-        return new SignedHeaderClient(service, new Token(pref.getOAuthToken(), pref.getOAuthTokenSecret()));
+    SignedHeaderClient provideSignedHeaderClient(OAuthService service, Session pref) {
+        return new SignedHeaderClient(service, new Token(pref.getToken(), pref.getTokenSecret()));
     }
 
     @Provides
@@ -117,5 +118,8 @@ public class ApiModule {
         return restAdapter.create(ResponseApi.class);
     }
 
-
+    @Provides
+    UserApi provideUserApi(RestAdapter restAdapter) {
+        return restAdapter.create(UserApi.class);
+    }
 }

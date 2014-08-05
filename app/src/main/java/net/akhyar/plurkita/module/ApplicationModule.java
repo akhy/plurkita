@@ -6,13 +6,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import net.akhyar.plurkita.AppPreferences;
 import net.akhyar.plurkita.Application;
 import net.akhyar.plurkita.AuthorizeActivity;
 import net.akhyar.plurkita.BaseActivity;
 import net.akhyar.plurkita.LoginActivity;
 import net.akhyar.plurkita.NewPlurkActivity;
 import net.akhyar.plurkita.ResponsesActivity;
+import net.akhyar.plurkita.Session;
 import net.akhyar.plurkita.TimelineActivity;
 
 import javax.inject.Singleton;
@@ -56,8 +56,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    AppPreferences provideAppPreferences(Context context) {
-        return new AppPreferences(context.getSharedPreferences(PREF_KEY, 0));
+    Session provideSession() {
+        return new Session(context);
     }
 
     @Provides

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import com.dd.processbutton.iml.ActionProcessButton;
 
 import net.akhyar.plurkita.api.AuthApi;
+import net.akhyar.plurkita.api.UserApi;
+import net.akhyar.plurkita.model.User;
 
 import javax.inject.Inject;
 
@@ -16,6 +18,11 @@ import butterknife.OnClick;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity {
@@ -25,7 +32,7 @@ public class LoginActivity extends BaseActivity {
     @Inject
     Timber.Tree log;
     @Inject
-    AppPreferences preferences;
+    Session session;
     @InjectView(R.id.login)
     ActionProcessButton login;
 
@@ -42,7 +49,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login)
     public void requestToken() {
-        preferences.clearOAuthToken();
+        session.clearToken();
         login.setEnabled(false);
         login.setProgress(50);
         login.setLoadingText("Requesting Token");
@@ -51,7 +58,7 @@ public class LoginActivity extends BaseActivity {
             public void success(String tokenParams, Response response) {
                 log.d("Success: %s", tokenParams);
                 Uri uri = Uri.parse("http://dummy?" + tokenParams);
-                preferences.setOAuthToken(
+                session.setToken(
                         uri.getQueryParameter("oauth_token"),
                         uri.getQueryParameter("oauth_token_secret"));
                 requestVerifier(tokenParams);
@@ -71,7 +78,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onError(Throwable throwable) {
-        preferences.clearOAuthToken();
+        session.clearToken();
         login.setProgress(-1);
         login.setEnabled(true);
     }
@@ -93,27 +100,40 @@ public class LoginActivity extends BaseActivity {
 
     private void requestAccessToken(String verifier) {
         login.setLoadingText("Verifying Access");
-        Application.getInstance(AuthApi.class).getAccessToken(
-                verifier,
-                new Callback<String>() {
+        Application.getInstance(AuthApi.class).getAccessToken(verifier)
+                .flatMap(new Func1<String, Observable<User>>() {
                     @Override
-                    public void success(String accessTokenParams, Response response) {
+                    public Observable<User> call(String accessTokenParams) {
                         log.d("Permanent access token: %s", accessTokenParams);
                         Uri uri = Uri.parse("http://dummy?" + accessTokenParams);
-                        preferences.setOAuthToken(
+                        session.setToken(
                                 uri.getQueryParameter("oauth_token"),
                                 uri.getQueryParameter("oauth_token_secret"));
 
-                        login.setProgress(100);
-                        login.setEnabled(true);
+                        return Application.getInstance(UserApi.class).getMySelf();
                     }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<User>() {
+                               @Override
+                               public void call(User user) {
+                                   log.i("Logged in as @%s", user.getNickName());
+                                   session.login(user);
+                               }
+                           }, new Action1<Throwable>() {
+                               @Override
+                               public void call(Throwable throwable) {
+                                   onError(throwable);
+                               }
+                           }, new Action0() {
+                               @Override
+                               public void call() {
+                                   login.setProgress(100);
+                                   login.setEnabled(true);
 
-                    @Override
-                    public void failure(RetrofitError retrofitError) {
-                        log.d(retrofitError, "Error getting access token");
-                        onError(retrofitError);
-                    }
-                }
-        );
+                                   startActivity(new Intent(LoginActivity.this, TimelineActivity.class));
+                               }
+                           }
+                );
     }
 }
