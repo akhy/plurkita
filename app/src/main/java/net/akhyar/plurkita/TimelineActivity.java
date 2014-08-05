@@ -90,7 +90,7 @@ public class TimelineActivity extends BaseActivity implements
         eventBus.register(this);
 
         if (!session.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, UserActivity.class));
             finish();
         }
 

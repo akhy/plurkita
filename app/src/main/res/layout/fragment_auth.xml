@@ -11,15 +11,8 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context=".LoginActivity">
 
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/creature_4"/>
-
     <com.dd.processbutton.iml.ActionProcessButton
-        android:id="@+id/login"
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="200dp"
@@ -35,6 +28,7 @@
         app:pb_textProgress="Authenticating"/>
 
     <TextView
+        android:id="@+id/notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
