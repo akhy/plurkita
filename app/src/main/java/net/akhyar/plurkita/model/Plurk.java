@@ -6,6 +6,10 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 /**
  * @author akhyar
@@ -13,6 +17,7 @@ import org.joda.time.DateTime;
 @Table(name = Plurk.TABLE_NAME)
 public class Plurk extends Model {
 
+    public static final DateTimeFormatter OFFSET_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
     public static final String ID = "_id";
     public static final String TABLE_NAME = "Plurks";
 
@@ -44,8 +49,6 @@ public class Plurk extends Model {
     int responseCount;
     @Column
     int responsesSeen;
-    @Column
-    long[] limitedTo;
     @Column
     boolean favorite;
     @Column
@@ -97,7 +100,6 @@ public class Plurk extends Model {
         this.contentRaw = plurk.contentRaw;
         this.responseCount = plurk.responseCount;
         this.responsesSeen = plurk.responsesSeen;
-        this.limitedTo = plurk.limitedTo;
         this.favorite = plurk.favorite;
         this.favoriteCount = plurk.favoriteCount;
         this.favorers = plurk.favorers;
@@ -105,6 +107,33 @@ public class Plurk extends Model {
         this.replurked = plurk.replurked;
         this.replurkersCount = plurk.replurkersCount;
         this.replurkers = plurk.replurkers;
+    }
+
+    public String getTimestampForOffset() {
+        return OFFSET_FORMAT.print(posted);
+    }
+
+    public String getShortRelativeTime() {
+        DateTime now = DateTime.now();
+        if (posted.isAfter(now))
+            posted = now;
+
+        Period p = new Period(posted, now);
+        StringBuilder b = new StringBuilder();
+
+        if (new Duration(posted, now).getStandardMinutes() == 0) {
+            b.append("Just now");
+        } else {
+            if (p.getWeeks() > 0)
+                b.append(p.getWeeks()).append("w");
+            else if (p.getDays() > 0)
+                b.append(p.getDays()).append("d");
+            else if (p.getHours() > 0)
+                b.append(p.getHours()).append("h");
+            else if (p.getMinutes() > 0)
+                b.append(p.getMinutes()).append("m");
+        }
+        return b.toString();
     }
 
     public long getReplurkerId() {
@@ -157,10 +186,6 @@ public class Plurk extends Model {
 
     public int getResponsesSeen() {
         return responsesSeen;
-    }
-
-    public long[] getLimitedTo() {
-        return limitedTo;
     }
 
     public boolean isFavorite() {

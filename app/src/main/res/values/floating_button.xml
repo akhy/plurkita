@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatingActionButton">
+        <attr name="fab_background_color" format="color"/>
+        <attr name="fab_drawable" format="reference"/>
+    </declare-styleable>
+</resources>

@@ -1,6 +1,7 @@
 package net.akhyar.plurkita.model;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.akhyar.android.adapters.ViewHolderListAdapter;
+import net.akhyar.android.helpers.ViewUtil;
 import net.akhyar.plurkita.R;
+import net.akhyar.plurkita.util.CircleTransform;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,6 +31,12 @@ public class PlurkViewHolder extends ViewHolderListAdapter.ViewHolder<Plurk> {
     TextView displayName;
     @InjectView(R.id.nickName)
     TextView nickName;
+    @InjectView(R.id.responseCount)
+    TextView responseCount;
+    @InjectView(R.id.favoriteCount)
+    TextView favoriteCount;
+    @InjectView(R.id.replurkCount)
+    TextView replurkCount;
     @InjectView(R.id.avatar)
     ImageView avatar;
 
@@ -48,8 +57,18 @@ public class PlurkViewHolder extends ViewHolderListAdapter.ViewHolder<Plurk> {
             nickName.setText(String.format("@%s", user.getNickName()));
 
             Picasso.with(context)
-                    .load(user.getAvatarUrl()).into(avatar);
+                    .load(user.getAvatarUrl())
+                    .resizeDimen(R.dimen.avatar_size, R.dimen.avatar_size)
+                    .centerCrop()
+                    .transform(new CircleTransform())
+                    .into(avatar);
         }
-        content.setText(plurk.getContentRaw());
+        content.setText(Html.fromHtml(plurk.getContent()));
+        responseCount.setText(context.getString(R.string.response_count, plurk.getResponseCount()));
+        favoriteCount.setText(context.getString(R.string.favorite_count, plurk.getFavoriteCount()));
+        replurkCount.setText(context.getString(R.string.replurk_count, plurk.getReplurkersCount()));
+
+        ViewUtil.setPresence(replurkCount, plurk.getReplurkersCount() > 0);
+        ViewUtil.setPresence(responseCount, plurk.getNoComments() != 1);
     }
 }

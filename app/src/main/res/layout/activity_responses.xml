@@ -15,7 +15,8 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:headerDividersEnabled="true"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"
             tools:listheader="@layout/item_plurk"
             tools:listitem="@layout/item_response"/>
 

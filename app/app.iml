@@ -63,13 +63,14 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="timber-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="android-iconify-1.0.6" level="project" />
     <orderEntry type="library" exported="" name="guava-15.0" level="project" />
-    <orderEntry type="library" exported="" name="dagger-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="android.joda-2.3.3" level="project" />
+    <orderEntry type="library" exported="" name="dagger-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="flatui-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-core-0.20.0-RC4" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.3.2" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-core-0.20.0-RC2" level="project" />
     <orderEntry type="library" exported="" name="aspectjrt-1.7.4" level="project" />
     <orderEntry type="library" exported="" name="dagger-compiler-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="eventbus-2.2.1" level="project" />
@@ -88,7 +89,7 @@
     <orderEntry type="library" exported="" name="hugo-runtime-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="crouton-1.8.4" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-android-0.20.0-RC2" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-android-0.20.0-RC4" level="project" />
     <orderEntry type="module" module-name="akhylib" exported="" />
   </component>
 </module>

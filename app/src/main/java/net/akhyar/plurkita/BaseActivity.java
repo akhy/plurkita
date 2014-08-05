@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.cengalabs.flatui.FlatUI;
 
@@ -29,10 +30,13 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(
                 this, R.array.plurk_theme, false, 2
         ));
         getSupportActionBar().setTitle(getTitle());
+        setSupportProgressBarIndeterminate(true);
+        setSupportProgressBarIndeterminateVisibility(false);
     }
 
     @Override
@@ -48,7 +52,11 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     public void onEventMainThread(ErrorEvent event) {
-        Crouton.makeText(this, event.getMessage(), Style.ALERT).show();
+        showAlert(event.getMessage());
+    }
+
+    public void showAlert(String text) {
+        Crouton.makeText(this, text, Style.ALERT).show();
     }
 
     @Override

@@ -56,11 +56,12 @@ public class SignedHeaderClient extends OkClient {
         String verifier = getVerifierFromUrl(request.getUrl());
         if (!TextUtils.isEmpty(verifier)) {
             // TODO find better method to remove certain query parameters
-            request = new Request(
-                    request.getMethod(),
-                    removeParam(request.getUrl(), "oauth_verifier"),
-                    request.getHeaders(),
-                    request.getBody());
+            if (!request.getMethod().equalsIgnoreCase("GET"))
+                request = new Request(
+                        request.getMethod(),
+                        removeParam(request.getUrl(), "oauth_verifier"),
+                        request.getHeaders(),
+                        request.getBody());
         }
 
         OAuthRequestAdapter tmp = new OAuthRequestAdapter(request);

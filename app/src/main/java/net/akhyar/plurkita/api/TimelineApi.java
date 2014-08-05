@@ -1,8 +1,10 @@
 package net.akhyar.plurkita.api;
 
+import net.akhyar.plurkita.model.Plurk;
 import net.akhyar.plurkita.model.Timeline;
 
 import retrofit.http.GET;
+import retrofit.http.Query;
 import rx.Observable;
 
 /**
@@ -10,7 +12,18 @@ import rx.Observable;
  */
 public interface TimelineApi {
 
-    @GET("/Timeline/getPlurks?limit=10")
+    @GET("/Timeline/getPlurks?limit=20")
     Observable<Timeline> getPlurks();
 
+    @GET("/Timeline/getPlurks?limit=20")
+    Observable<Timeline> getPlurks(
+            @Query("offset") String before
+    );
+
+    // TODO change to a proper POST request
+    @GET("/Timeline/plurkAdd")
+    Observable<Plurk> addPlurk(
+            @Query("qualifier") String qualifier,
+            @Query("content") String content
+    );
 }

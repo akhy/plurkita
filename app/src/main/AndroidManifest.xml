@@ -35,6 +35,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".NewPlurkActivity"
+            android:label="@string/title_activity_new_plurk">
+        </activity>
+        <activity
             android:name=".ResponsesActivity"
             android:label="@string/title_activity_responses">
         </activity>

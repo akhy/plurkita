@@ -8,37 +8,82 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginRight="8dp"
-        android:background="#345678"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/avatar_bg"
         android:scaleType="centerCrop"/>
+
 
     <TextView
         android:id="@+id/displayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/avatar"
         android:text="chickenger"
-        android:textStyle="bold"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/nickName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/displayName"
         android:text="\@akhy"
-        android:textColor="#ababab"/>
+        android:textColor="#ababab"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/contentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/displayName"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/avatar"
-        android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit :)"/>
+        android:autoLink="email|web"
+        android:ellipsize="end"
+        android:linksClickable="true"
+        android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit :)"
+        android:textColor="#787878"
+        android:textColorLink="@color/tertiary_base"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contentText"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/avatar"
+        android:orientation="horizontal">
+
+        <android.widget.IconTextView
+            android:id="@+id/responseCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="112"
+            android:textColor="@color/gray"/>
+
+        <android.widget.IconTextView
+            android:id="@+id/favoriteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="5"
+            android:textColor="@color/gray"/>
+
+        <android.widget.IconTextView
+            android:id="@+id/replurkCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="1"
+            android:textColor="@color/gray"/>
+    </LinearLayout>
+
+
 </RelativeLayout>

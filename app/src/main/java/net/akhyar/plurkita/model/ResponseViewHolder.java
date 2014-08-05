@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import net.akhyar.android.adapters.ViewHolderListAdapter;
 import net.akhyar.plurkita.R;
+import net.akhyar.plurkita.util.CircleTransform;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -48,7 +49,11 @@ public class ResponseViewHolder extends ViewHolderListAdapter.ViewHolder<Respons
             nickName.setText(String.format("@%s", user.getNickName()));
 
             Picasso.with(context)
-                    .load(user.getAvatarUrl()).into(avatar);
+                    .load(user.getAvatarUrl())
+                    .resizeDimen(R.dimen.avatar_size, R.dimen.avatar_size)
+                    .centerCrop()
+                    .transform(new CircleTransform())
+                    .into(avatar);
         }
         content.setText(response.getContentRaw());
     }

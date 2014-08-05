@@ -3,10 +3,7 @@ package net.akhyar.plurkita.api;
 import net.akhyar.plurkita.model.Conversation;
 import net.akhyar.plurkita.model.Response;
 
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.POST;
 import retrofit.http.Query;
 import rx.Observable;
 
@@ -20,18 +17,18 @@ public interface ResponseApi {
             @Query("plurk_id") long plurkId
     );
 
-    @POST("/Responses/responseAdd")
-    @FormUrlEncoded
+    // TODO change to a proper POST request
+    @GET("/Responses/responseAdd")
     Observable<Response> postResponse(
-            @Field("plurk_id") long plurkId,
-            @Field("content") String content,
-            @Field("qualifier") String qualifier
+            @Query("plurk_id") long plurkId,
+            @Query("content") String content,
+            @Query("qualifier") String qualifier
     );
 
-    @POST("/Responses/responseDelete")
-    @FormUrlEncoded
+    // TODO change to a proper POST request
+    @GET("/Responses/responseDelete")
     Observable<Void> deleteResponse(
-            @Field("plurk_id") long plurkId,
-            @Field("response_id") long responseId
+            @Query("plurk_id") long plurkId,
+            @Query("response_id") long responseId
     );
 }
