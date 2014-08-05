@@ -23,7 +23,7 @@
             android:value="1"/>
         <meta-data
             android:name="AA_SERIALIZERS"
-            android:value="net.akhyar.plurkita.model.ArrayOfLongTypeSerializer,net.akhyar.plurkita.model.DateTimeTypeSerializer"/>
+            android:value="net.akhyar.plurkita.model.util.ArrayOfLongTypeSerializer,net.akhyar.plurkita.model.util.DateTimeTypeSerializer"/>
 
         <activity
             android:name=".TimelineActivity"

@@ -1,4 +1,4 @@
-package net.akhyar.plurkita.model;
+package net.akhyar.plurkita;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -6,8 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 /**
  * @author akhyar
  */
-public class Utils {
-
+public class PlurkUtils {
     final static DateTimeFormatter PLURK = DateTimeFormat.forPattern("E, dd MMM yyyy HH:mm:ss ZZZZ");
 
     public static String getAvatarUrl(long userId, int hasProfileImage, int avatar, String size) {

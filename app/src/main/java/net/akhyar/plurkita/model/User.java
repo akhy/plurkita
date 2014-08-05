@@ -6,6 +6,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.SerializedName;
 
+import net.akhyar.plurkita.PlurkUtils;
+
 import org.joda.time.DateTime;
 
 /**
@@ -77,7 +79,7 @@ public class User extends Model {
     }
 
     public String getAvatarUrl(String size) {
-        return Utils.getAvatarUrl(userId, hasProfileImage, avatar, size);
+        return PlurkUtils.getAvatarUrl(userId, hasProfileImage, avatar, size);
     }
 
     public String getNickName() {

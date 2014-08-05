@@ -1,4 +1,4 @@
-package net.akhyar.plurkita.model;
+package net.akhyar.plurkita.model.util;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

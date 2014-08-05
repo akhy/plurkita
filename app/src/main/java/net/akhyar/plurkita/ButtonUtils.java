@@ -5,7 +5,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 /**
  * @author akhyar
  */
-public class ButtonUtil {
+public class ButtonUtils {
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_PROCESS = 1;

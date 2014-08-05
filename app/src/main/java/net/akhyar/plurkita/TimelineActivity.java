@@ -116,7 +116,7 @@ public class TimelineActivity extends BaseActivity implements
         if (lastItem == null)
             onRefresh();
         else {
-            ButtonUtil.setState(loadMore, ButtonUtil.STATE_PROCESS, true);
+            ButtonUtils.setState(loadMore, ButtonUtils.STATE_PROCESS, true);
             String offset = lastItem.getTimestampForOffset();
             Application.getInstance(TimelineApi.class).getPlurks(offset)
                     .subscribeOn(Schedulers.io())
@@ -128,12 +128,12 @@ public class TimelineActivity extends BaseActivity implements
                                 @Override
                                 public void call(Throwable throwable) {
                                     errorBus.post(new ErrorEvent(throwable));
-                                    ButtonUtil.setState(loadMore, ButtonUtil.STATE_ERROR, true);
+                                    ButtonUtils.setState(loadMore, ButtonUtils.STATE_ERROR, true);
                                 }
                             }, new Action0() {
                                 @Override
                                 public void call() {
-                                    ButtonUtil.setState(loadMore, ButtonUtil.STATE_NORMAL, true);
+                                    ButtonUtils.setState(loadMore, ButtonUtils.STATE_NORMAL, true);
                                 }
                             }
                     );

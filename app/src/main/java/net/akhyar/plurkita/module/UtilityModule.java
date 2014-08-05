@@ -12,7 +12,7 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import net.akhyar.plurkita.BuildConfig;
-import net.akhyar.plurkita.model.DateTimeTypeConverter;
+import net.akhyar.plurkita.model.util.DateTimeTypeConverter;
 
 import org.joda.time.DateTime;
 
