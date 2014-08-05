@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 apply plugin: 'hugo'
 
 android {
@@ -12,12 +27,14 @@ android {
         versionName '0.1.0-alpha.1'
     }
     buildTypes {
+        debug {
+            ext.enableCrashlytics = false
+        }
         release {
+            ext.enableCrashlytics = true
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    productFlavors {
     }
 }
 
@@ -38,7 +55,6 @@ dependencies {
     compile 'net.danlew:android.joda:2.3.3'
     compile 'com.squareup.dagger:dagger:1.2.1'
     provided 'com.squareup.dagger:dagger-compiler:1.2.1'
-
     // Additional
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.1'
     compile 'com.joanzapata.android:android-iconify:1.0.6'
@@ -46,4 +62,5 @@ dependencies {
     compile 'com.netflix.rxjava:rxjava-android:+'
     compile 'org.scribe:scribe:+'
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.4'
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }

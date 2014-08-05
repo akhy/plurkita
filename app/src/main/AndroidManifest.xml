@@ -54,6 +54,7 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="b2a0dc7d5d245d14a9632cec7842b291bb8f3c52"/>
     </application>
 
 </manifest>

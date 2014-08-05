@@ -2,6 +2,7 @@ package net.akhyar.plurkita;
 
 import com.activeandroid.ActiveAndroid;
 import com.cengalabs.flatui.FlatUI;
+import com.crashlytics.android.Crashlytics;
 
 import net.akhyar.plurkita.api.ApiModule;
 import net.akhyar.plurkita.module.ApplicationModule;
@@ -38,6 +39,8 @@ public class Application extends android.app.Application {
         FlatUI.setDefaultTheme(R.array.plurk_theme);
         ActiveAndroid.initialize(this);
         ResourceZoneInfoProvider.init(this);
+        Crashlytics.start(this);
+
         graph = ObjectGraph.create(
                 new ApplicationModule(this),
                 new UtilityModule(),
