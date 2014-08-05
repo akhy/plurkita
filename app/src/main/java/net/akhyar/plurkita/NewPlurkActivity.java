@@ -78,7 +78,7 @@ public class NewPlurkActivity extends BaseActivity {
     private void send() {
         setSupportProgressBarIndeterminateVisibility(true);
         send.setVisible(false);
-        timelineApi.addPlurk(":", contentText.getText().toString())
+        timelineApi.addPlurk("says", contentText.getText().toString())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Action1<Plurk>() {

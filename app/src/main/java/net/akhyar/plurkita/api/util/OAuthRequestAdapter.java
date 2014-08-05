@@ -1,7 +1,5 @@
 package net.akhyar.plurkita.api.util;
 
-import android.net.Uri;
-
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Verb;
 
@@ -11,32 +9,30 @@ import java.util.ArrayList;
 
 import retrofit.client.Header;
 import retrofit.client.Request;
+import retrofit.mime.MimeUtil;
 
 /**
  * @author akhyar
  */
 public class OAuthRequestAdapter extends OAuthRequest {
 
-    private Request request;
+    private Request mRequest;
 
     public OAuthRequestAdapter(Request request) {
-        super(Verb.valueOf(request.getMethod()), request.getUrl());
-        this.request = request;
+        super(Verb.valueOf(request.getMethod().toUpperCase()), request.getUrl());
+        mRequest = request;
+
+        // replicate header
+        for (Header header : request.getHeaders())
+            addHeader(header.getName(), header.getValue());
 
         // replicate request body
-        if (request.getBody() != null &&
-                request.getBody().mimeType().startsWith("application/x-www-form-urlencoded")) {
-
+        if (request.getBody() != null) {
+            setCharset(MimeUtil.parseCharset(request.getBody().mimeType()));
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try {
                 request.getBody().writeTo(out);
-                String params = new String(out.toByteArray());
-
-                // TODO find a better way to convert query params to map
-                Uri dummy = Uri.parse("http://dummy?" + params);
-                for (String key : dummy.getQueryParameterNames())
-                    addBodyParameter(key, dummy.getQueryParameter(key));
-
+                addPayload(out.toByteArray());
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -49,16 +45,16 @@ public class OAuthRequestAdapter extends OAuthRequest {
         }
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
     @Override
     public void addHeader(String key, String value) {
         super.addHeader(key, value);
-        ArrayList<Header> headers = new ArrayList<Header>(request.getHeaders());
+        ArrayList<Header> headers = new ArrayList<Header>(mRequest.getHeaders());
         headers.add(new Header(key, value));
-        request = new Request(request.getMethod(), request.getUrl(), headers, request.getBody());
+        mRequest = new Request(mRequest.getMethod(), mRequest.getUrl(), headers, mRequest.getBody());
+    }
+
+    public Request getRequest() {
+        return mRequest;
     }
 
 }
