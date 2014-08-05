@@ -6,14 +6,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import net.akhyar.plurkita.AppPreferences;
 import net.akhyar.plurkita.Application;
+import net.akhyar.plurkita.AuthFragment;
 import net.akhyar.plurkita.AuthorizeActivity;
 import net.akhyar.plurkita.BaseActivity;
-import net.akhyar.plurkita.LoginActivity;
 import net.akhyar.plurkita.NewPlurkActivity;
 import net.akhyar.plurkita.ResponsesActivity;
+import net.akhyar.plurkita.Session;
 import net.akhyar.plurkita.TimelineActivity;
+import net.akhyar.plurkita.UserActivity;
 
 import javax.inject.Singleton;
 
@@ -27,15 +28,15 @@ import dagger.Provides;
         injects = {
                 Application.class,
                 BaseActivity.class,
-                LoginActivity.class,
+                UserActivity.class,
                 AuthorizeActivity.class,
                 TimelineActivity.class,
                 NewPlurkActivity.class,
-                ResponsesActivity.class
+                ResponsesActivity.class,
+                AuthFragment.class
         })
 public class ApplicationModule {
 
-    private static final String PREF_KEY = "plurkita";
     private Context context;
 
     public ApplicationModule(Context context) {
@@ -56,8 +57,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    AppPreferences provideAppPreferences(Context context) {
-        return new AppPreferences(context.getSharedPreferences(PREF_KEY, 0));
+    Session provideSession() {
+        return new Session(context);
     }
 
     @Provides

@@ -68,7 +68,7 @@ public class BaseActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_login) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, UserActivity.class));
             return true;
         }
 
